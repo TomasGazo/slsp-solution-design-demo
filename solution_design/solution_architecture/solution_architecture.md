@@ -1,11 +1,11 @@
 # Solution Architecture
 
 ## Overview
-The application will follow a client-server model, with the mobile app as the client and a backend server handling data processing and storage.
+The solution architecture follows a client-server model, with the mobile app (`Quiz_App`) as the client and a backend server (`Quiz_Microservice`) handling business logic and data operations.
 
-Data encryption, secure API access, and user authentication measures will be implemented to protect user data and privacy.
+Identity provider (`Authentication_Server`) serves to provide measuers both to Secure API access and User Authentication.
 
 ## High-Level Architecture Diagram
-![Architecture as Component Diagram](assets/quiz_backend-component_diagram-simplified.png)
+![Solution Architecture - Component Diagram](assets/quiz_backend-component_diagram-simplified.svg)
 
-Source: [Architecture as Component Diagram](assets/quiz_backend-component_diagram-simplified.drawio)
+Source: [Solution Architecture - Component Diagram](assets/quiz_backend-component_diagram-simplified.drawio)
