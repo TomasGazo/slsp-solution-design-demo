@@ -45,10 +45,13 @@ Target Users - Individuals seeking to learn through interactive quizzes.
 
 ### Functional Requirements
 #### `DEMO`
-- **User Authentication and Registration**: Allow users to sign up and log in to the application, capturing essential information such as name and email.
-- **Quiz Participation**: Users should be able to participate on **predefinied quiz**, answer its questions, receive immediate feedback, and receive quiz evaluation.
+- **User Authentication and Registration (Signup)**: Allow users to sign up and log in to the application, capturing essential information such as name and email.
+- **Quiz Participation**: Users should be able to participate on **predefined quiz**, answer its questions, receive immediate feedback, and receive quiz evaluation.
 - **Imediate Feedback**: Provide users imediate feedback after every answered question.
-- **Quiz Evaluation**: Display a quiz result screen at the end of the quiz, showing the user’s total score, and the elapsed time taken to complete the quiz. 
+- **Quiz Evaluation**: Display a quiz result screen at the end of the quiz, showing the user’s total score, and the elapsed time taken to complete the quiz.
+- **Track User Progress**: Continuously track and display the user’s progress during the quiz, including:
+  - Current question number out of total questions.
+  - A visual progress indicator (e.g., progress bar or percentage completed).
 
 #### `Full Scope` - Extentions
 - **Quiz Selection**: Users should be able to **choose** from a **variety of quizzes**, answer questions, and receive immediate feedback.

@@ -37,7 +37,7 @@
                 <mxCell id="-2r-90PtI8P-8tN_v8Jw-2" value="Authorised user" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
                     <mxGeometry x="170" y="650" width="30" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="-2r-90PtI8P-8tN_v8Jw-4" value="Authentication" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
+                <mxCell id="-2r-90PtI8P-8tN_v8Jw-4" value="Signup" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" parent="1" vertex="1">
                     <mxGeometry x="430" y="200" width="140" height="70" as="geometry"/>
                 </mxCell>
                 <mxCell id="-2r-90PtI8P-8tN_v8Jw-6" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;dashed=1;endArrow=open;endFill=0;dashPattern=8 8;" parent="1" source="-2r-90PtI8P-8tN_v8Jw-5" target="-2r-90PtI8P-8tN_v8Jw-4" edge="1">
@@ -150,6 +150,17 @@
                 <mxCell id="14" value="&amp;lt;&amp;lt;includes&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="13">
                     <mxGeometry x="0.125" relative="1" as="geometry">
                         <mxPoint y="-11" as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="15" value="" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=open;endFill=0;startArrow=none;startFill=0;dashed=1;dashPattern=8 8;" edge="1" parent="1" source="-2r-90PtI8P-8tN_v8Jw-18" target="12">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="534.4960215314145" y="497.786982665124" as="sourcePoint"/>
+                        <mxPoint x="575.4213590888266" y="552.2284787851022" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="16" value="&amp;lt;&amp;lt;includes&amp;gt;&amp;gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="15">
+                    <mxGeometry x="0.125" relative="1" as="geometry">
+                        <mxPoint y="5" as="offset"/>
                     </mxGeometry>
                 </mxCell>
             </root>
