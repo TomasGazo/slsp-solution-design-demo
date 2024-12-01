@@ -11,7 +11,8 @@
 - Users will use only name and email as authorization credentials. See User Authroization in Quiz We Application specification.
 
 ##### Specifications
-- [Oauth Server Specification](../../specifications/authentication_server_spec/authentication_server.md)
+- [Authentication_Server Specification - API Structure](../../specifications/authentication_server_spec/authentication_server-openapi.yaml)
+- [Authentication_Server Specification - Business Logic](../../specifications/authentication_server_spec/authentication_server.md)
 
 ### 👥 Team - Backend
 - Provide data for the Quiz Application

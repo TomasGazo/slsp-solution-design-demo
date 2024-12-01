@@ -1,0 +1,144 @@
+openapi: 3.0.3
+info:
+  title: Authorization Server API
+  description: API for authorization using OAuth 2.0 with Client Credentials Flow and JWT introspection.
+  version: 1.0.0
+servers:
+  - url: https://authserver.demo.slsp.sk/api
+    description: Production server
+paths:
+  /oauth2/authorize:
+    post:
+      summary: Obtain access token using Client Credentials Flow
+      description: Endpoint to obtain an access token using the OAuth 2.0 Client Credentials Flow.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                client_id:
+                  type: string
+                  description: The client ID issued to the application.
+                client_secret:
+                  type: string
+                  format: password
+                  description: The client secret issued to the application.
+                grant_type:
+                  type: string
+                  description: Must be `client_credentials` for this flow.
+                  example: client_credentials
+              required:
+                - client_id
+                - client_secret
+                - grant_type
+      responses:
+        '200':
+          description: Access token response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    description: The access token issued by the authorization server.
+                  token_type:
+                    type: string
+                    description: The type of token issued, typically `Bearer`.
+                  expires_in:
+                    type: integer
+                    description: The duration in seconds until the token expires.
+                  scope:
+                    type: string
+                    description: The scope of the access token.
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /oauth2/introspect:
+    post:
+      summary: Introspect an access token
+      description: Endpoint to check the validity and metadata of an access token.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  description: The access token to be introspected.
+                token_type_hint:
+                  type: string
+                  description: A hint about the type of the token submitted for introspection.
+                  enum:
+                    - access_token
+                    - refresh_token
+                  example: access_token
+              required:
+                - token
+      responses:
+        '200':
+          description: Token introspection response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  active:
+                    type: boolean
+                    description: Indicates whether the token is currently active.
+                  scope:
+                    type: string
+                    description: The scope of the token.
+                  client_id:
+                    type: string
+                    description: The client ID associated with the token.
+                  username:
+                    type: string
+                    description: The username associated with the token (if applicable).
+                  exp:
+                    type: integer
+                    description: The expiration time of the token in UNIX timestamp.
+                  iat:
+                    type: integer
+                    description: The issuance time of the token in UNIX timestamp.
+                  sub:
+                    type: string
+                    description: The subject of the token.
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: The error code.
+        description:
+          type: string
+          description: A description of the error.
+      required:
+        - error
