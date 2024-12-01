@@ -1,0 +1,408 @@
+openapi: 3.0.3
+info: 
+  title: Quiz Server
+  description: |
+    Quiz Server API - DEMO.
+  version: 1.1.0
+
+#-------------#
+# API Servers #
+#-------------#
+servers:
+  - url: https://quiz.demo.slsp.sk:{port}/api
+    description: Production server
+    variables:
+      port:
+        enum:
+          - '8443'
+        default: '8443'
+
+#----------#
+# API Tags #
+#----------#
+tags:
+  - name: Quiz
+    description: |
+      Quiz related endpoints.
+
+#---------------------------------------#
+# API Top Level Security Default Object #
+#---------------------------------------#
+security:
+  - AccessToken: []
+
+#-----------#
+# API Paths #
+#-----------#
+paths:
+
+  /quiz/progress:
+    get:
+      tags:
+      - Quiz
+      security:
+        - AccessToken:
+          - api:readProgress
+      summary: Get personalized quiz progress.
+      responses:
+        '200':
+          $ref: "#/components/responses/ProgressResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json: {}
+  
+  /quiz/questions/{id}:
+    get:
+      tags:
+      - Quiz
+      security:
+        - AccessToken:
+          - api:readQuestions
+      summary: Get single quiz question.
+      parameters:
+        - $ref: '#/components/parameters/questionId'
+      responses:
+        '200':
+          $ref: "#/components/responses/QuestionResponse"
+        '404':
+          $ref: "#/components/responses/QuestionErrorResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json: {}
+
+  /quiz/answer:
+    post:
+      tags:
+      - Quiz
+      security:
+        - AccessToken:
+          - api:writeAnswers
+      summary: Submit the answer and receive answer evaluation.
+      requestBody:
+        $ref: "#/components/requestBodies/AnswerRequest"
+      responses:
+        '200':
+          $ref: "#/components/responses/AnswerResponse"
+        '400':
+          $ref: "#/components/responses/AnswerErrorResponse"
+        default:
+          description: Unexpected error
+          content:
+            application/json: {}
+
+#----------------#
+# API Components #
+#----------------#
+components:
+
+  #----------------------------------#
+  # API Components - SecuritySchemes #
+  #----------------------------------#
+  securitySchemes:
+    AccessToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  #-----------------------------#
+  # API Components - Parameters #
+  #-----------------------------#
+  parameters:
+    questionId:
+      name: id
+      in: path
+      required: true
+      schema:
+        $ref: '#/components/schemas/Id'
+    
+  #--------------------------#
+  # API Components - Schemas #
+  #--------------------------#
+  schemas:
+
+    Id:
+      type: string
+      format: uuid
+      description: A unique identifier in UUID format.
+      example: 4b345629-11e6-458c-b81a-9c6d291974e5
+
+    Option:
+      type: object
+      description: |
+        Option resource representing one multiple-choice item.
+      properties:
+        id:
+          $ref: "#/components/schemas/Id"
+        name:
+          type: string
+      required:
+        - id
+        - name
+          
+    Question:
+      type: object
+      description: |
+        Quiz Question resource with the question wording and its options.
+      properties:
+        statement:
+          type: string
+        options:
+          type: array
+          items:
+            $ref: "#/components/schemas/Option"
+      required:
+        - statement
+        - options
+
+    AnswerEntry:
+      type: object
+      description: |
+        Question Answer resource submitted by the user.
+      properties:
+        questionId:
+          $ref: "#/components/schemas/Id"
+        selectedOptionId:
+          $ref: "#/components/schemas/Id"
+      required:
+        - questionId
+        - selectedOptionId
+
+    Answer:
+      description: |
+        Question Answer resource representing the evaluation of user answer.
+      allOf:
+        - type: object
+          properties:
+            id:
+              $ref: "#/components/schemas/Id"
+          required:
+            - id
+        - $ref: "#/components/schemas/AnswerEntry"
+        - type: object
+          properties:
+            correctOptionId:
+              $ref: "#/components/schemas/Id"
+          required:
+            - correctOptionId
+
+    Progress:
+      oneOf:
+        - $ref: "#/components/schemas/ProgressQuizStarted"
+        - $ref: "#/components/schemas/ProgressQuizEnded"
+
+    ProgressBase:
+      type: object
+      description: |
+        Quiz Progress resource representing quiz progress and evaluation.
+      properties:
+        answeredQuestions:
+          type: integer
+        totalQuestions:
+          type: integer
+        correctAnswers:
+          type: integer
+      required:
+        - answeredQuestions
+        - totalQuestions
+        - correctAnswers
+    
+    ProgressQuizStarted:
+      allOf:
+        - $ref: "#/components/schemas/ProgressBase"
+        - type: object
+          properties:
+            activeQuestion:
+              $ref: "#/components/schemas/Id"
+            quizStartedAt:
+              type: string
+              format: date-time
+          required:
+            - activeQuestion
+            - quizStartedAt
+
+    ProgressQuizEnded:
+      allOf:
+        - $ref: "#/components/schemas/ProgressBase"
+        - type: object
+          properties:
+            quizStartedAt:
+              type: string
+              format: date-time
+            quizEndedAt:
+              type: string
+              format: date-time
+          required:
+            - activeQuestion
+            - quizStartedAt
+            - quizEndedAt
+
+    Error:
+      type: object
+      description: |
+        Generic error message object
+      properties:
+        message:
+          type: string
+        scope:
+          type: string
+      required:
+        - message
+  
+  #---------------------------------#
+  # API Components - Request Bodies #
+  #---------------------------------#
+  requestBodies:
+
+    AnswerRequest:
+      description: |
+        Question Answer resource submitted by the user.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AnswerEntry"
+          examples:
+            answerRequestExample:
+              $ref: "#/components/examples/AnswerRequestExample"
+  
+  #----------------------------#
+  # API Components - Responses #
+  #----------------------------#
+  responses:
+
+    ProgressResponse:
+      description: |
+        Quiz Progress resource representing quiz progress and evaluation.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Progress"
+          examples:
+            ProgressResponseExample-QuizStarted:
+              $ref: "#/components/examples/ProgressQuizStartedResponseExample"
+            ProgressResponseExample-QuizEnded:
+              $ref: "#/components/examples/ProgressQuizEndedResponseExample"
+
+    QuestionResponse:
+      description: |
+        Quiz Question resource with the question wording and its options.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Question"
+          examples:
+            questionResponseExample:
+              $ref: "#/components/examples/QuestionResponseExample"
+
+    QuestionErrorResponse:
+      description: |
+        Error message object
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          examples:
+            questionErrorNotFoundResponseExample:
+              $ref: "#/components/examples/QuestionErrorNotFoundResponseExample"
+    
+    AnswerResponse:
+      description: |
+        Question Feedback resource decorating the Answer resource with next Question resource.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Answer"
+          examples:
+            AnswerResponseExample:
+              $ref: "#/components/examples/AnswerResponseExample"
+
+    AnswerErrorResponse:
+      description: |
+        Error message object
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+          examples:
+            answerErrorExample:
+              $ref: "#/components/examples/AnswerErrorResponseExample"
+  
+  #---------------------------#
+  # API Components - Examples #
+  #---------------------------#
+  examples:
+
+    ProgressBaseResponseExample:
+      value: {
+        "answeredQuestions": 1,
+        "totalQuestions": 5,
+        "correctAnswers": 1
+      }
+
+    ProgressQuizStartedResponseExample:
+      value: {
+        "answeredQuestions": 1,
+        "totalQuestions": 5,
+        "correctAnswers": 1,
+        "activeQuestion": "4b345629-11e6-458c-b81a-9c6d291974e5",
+        "quizStartedAt": "2024-11-29T14:30:00Z"
+      }
+
+    ProgressQuizEndedResponseExample:
+      value: {
+        "answeredQuestions": 1,
+        "totalQuestions": 5,
+        "correctAnswers": 1,
+        "quizStartedAt": "2024-11-29T14:30:00Z",
+        "quizEndedAt": "2024-11-29T15:00:00Z"
+      }
+
+    QuestionResponseExample:
+      value: {
+        "statement": "What was Gandalf's original name before coming to Middle-earth in J.R.R. Tolkien's lore?",
+        "options": [
+          {
+            "id": "02c5ee23-2e50-46bd-b144-8c7213ad9288",
+            "name": "Mithrandir"
+          },
+          {
+            "id": "29941f8f-919b-462d-93c2-8e83778bb660",
+            "name": "Olórin"
+          },
+          {
+            "id": "089b7ef8-ec1c-4c72-921b-dc865d1fef5a",
+            "name": "Curumo"
+          },
+          {
+            "id": "630a9238-30ff-4bfb-9ea9-76e5eb19e5b9",
+            "name": "Aiwendil"
+          }
+        ]
+      }
+
+    QuestionErrorNotFoundResponseExample:
+      value: {
+        "message": "ID_NOT_FOUND",
+        "scope": "question.id"
+      }
+
+    AnswerRequestExample:
+      value: {
+        "questionId": "91f8a00d-9f75-4793-8619-a1a23884d735",
+        "selectedOptionId": "29941f8f-919b-462d-93c2-8e83778bb660"
+      }
+
+    AnswerResponseExample:
+      value: {
+        "id": "70c02a2a-3b7b-4a10-b829-5d3e3ff03986",
+        "questionId": "91f8a00d-9f75-4793-8619-a1a23884d735",
+        "selectedOptionId": "02c5ee23-2e50-46bd-b144-8c7213ad9288",
+        "correctOptionId": "29941f8f-919b-462d-93c2-8e83778bb660"
+      }
+    
+    AnswerErrorResponseExample:
+      value: {
+        "message": "INVALID_ANSWER"
+      }
