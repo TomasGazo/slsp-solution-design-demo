@@ -1,7 +1,5 @@
 # 🔒 Authentication_Server Specification
 
-[[_TOC_]]
-
 ## Overview
 Standard Oauth 2.0 server according to [RFC 6749](https://datatracker.ietf.org/doc/html/rfc6749).
 - Client Credentials Flow

@@ -1,7 +1,5 @@
 # 📡 Quiz_Microservice Specification
 
-[[_TOC_]]
-
 ## Overview
 Quiz Server Microservice that enable users to receive and answer quiz questions.
 

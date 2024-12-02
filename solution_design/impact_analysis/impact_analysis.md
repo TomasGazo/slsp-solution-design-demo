@@ -1,7 +1,5 @@
 # Impact Analysis
 
-[[_TOC_]]
-
 ## Impacted Teams
 
 ### 👥 Team - Security

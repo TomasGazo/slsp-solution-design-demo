@@ -1,17 +1,10 @@
 # Slovenská sporiteľňa: Design of Digital Solutions - `DEMO`
 For all students and IT enthusiasts who want to learn more about designing digital solutions and the work of an IT analyst in the largest Slovak bank.
 
-[[_TOC_]]
-
 | Meta-data                                        |                 |
 | ------------------------------------------------ | --------------- |
 | **Specification language**                       | `EN`            |
 | **Solution / Application language**              | `SK`            |
-
-## Glossary
-| Term | Definition |
-| ---- | ---------- |
-|      |            |
 
 ## Business Assignment
 - [Business Assignment](business_assignment/business_assignment.md)
